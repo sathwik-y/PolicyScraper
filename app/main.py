@@ -27,7 +27,7 @@ async def scrape_and_extract(url):
             "content_length": len(lines),
             "status": "success"
         }
-        print(f"----Parsed & Converted the url: {url}------")
+        print(f"----Parsed & Converted the url: {url}----")
         return result
 
     except Exception as e:
