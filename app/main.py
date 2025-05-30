@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from app.services.scraper import get_html_from_url
 from app.services.converter import html_to_markdown
-import app.services.llm_parser as llm
-# from app.services.line_extractor import extract_lines_by_number
+import app.services.llm_service as llm
+import app.services.extractor as extractor
+
 app = FastAPI()
 
 @app.get("/scrape")
@@ -15,11 +16,19 @@ async def scrape_and_extract(url):
             file.write(markdown)
         
         line_numbers = llm.extract_line_numbers(markdown)
-        print("\n--- LINE NUMBERS ---\n", line_numbers)
+        print(f"Line Numbers: {line_numbers}")
         
-        # lines = extract_lines_by_number(markdown, line_numbers)
-        # final_content = llm.extract_policy_content(lines)
-        # print("source=", url, "extracted=", final_content)
+        lines = extractor.extract_content(markdown, line_numbers)
+        print(f"Extracted {len(lines)} characters")
+        result = {
+            "source": url,
+            "line_numbers": line_numbers,
+            "extracted_content": lines,
+            "content_length": len(lines),
+            "status": "success"
+        }
+        print(f"----Parsed & Converted the url: {url}------")
+        return result
 
     except Exception as e:
         import traceback
