@@ -19,19 +19,25 @@ def extract_line_numbers(markdown_text):
         # {markdown_text}
         # """
         prompt = f"""
-        You are tasked with identifying useful content from markdown converted from HTML.
-        Return ONLY line number ranges in this exact format, one per line:
-        START-END
-        START-END
-        
-        For single lines, use: LINE-LINE
-        
-        Example output:
-        1-5
-        12-18
-        25-25
-        
-        Markdown content:
+        You are an AI assistant tasked to extract only the necessary content from a markdown document converted from HTML.
+        The markdown contains line numbers appended as 'LINE_NUMBER: content'.
+
+        Task:
+        Return only the useful line number ranges in this exact format — one per line:
+        START-END  
+        (Even for a single line: LINE-LINE)
+
+        Output Rules:
+        - DO NOT include content, just the ranges.
+        - DO NOT add explanations or extra text.
+        - Only include line number pairs in the format shown.
+
+        Example:
+        1-3  
+        8-8  
+        15-22  
+
+        The markdown:
         {markdown_text}
         """
         response = client.messages.create(
